@@ -1,5 +1,4 @@
 import Knex from 'knex';
-//import knex from 'knex'
 
 export async function up(knex: Knex) {
     return knex.schema.createTable('items', table =>{

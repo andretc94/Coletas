@@ -1,7 +1,6 @@
 import { Response, Request } from 'express';
 import LocationModel from '../models/LocationModel';
 
-import ILocation from '../interfaces/locations'
 import ILocations from '../interfaces/locations';
 
 export default class LocationController {
