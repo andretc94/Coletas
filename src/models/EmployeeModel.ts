@@ -54,4 +54,20 @@ export default class EmployeeModel {
             id
         };
     }
+
+    public async findById(id: string){
+        const employee = await knex('employees').select().where({id}).first();
+
+        if(!employee){
+            return {message: "Employee not found!"}
+        }
+
+        const list = await knex('employees_locations as el')
+            .join('location as l', 'el.location_id', '=', 'l.id')
+            .where('el.employee_id', '=', id)
+            .groupBy('employee_id')
+            .select()
+        
+        return list;
+    }
 }

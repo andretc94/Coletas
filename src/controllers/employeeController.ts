@@ -20,4 +20,12 @@ export default class EmployeeController {
 
         return res.json(await employeeModel.create(employee, locationsIds));
     }
+
+    public async findById(req: Request, res: Response){
+        const employeeModel = new EmployeeModel();
+        
+        const {id} = req.params;
+
+        res.json(await employeeModel.findById(id));
+    }
 }
