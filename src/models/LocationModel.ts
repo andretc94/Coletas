@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 import knex from "../database/connection";
 import IItems from "../interfaces/items";
 import ILocations from "../interfaces/locations";
@@ -60,32 +62,48 @@ export default class LocationModel {
   public async update(id: string, image: string) {
     let location = await knex("location").where({ id }).first();
 
-    if (!location) {
-      return { message: "Location not found!" };
-    }
-
     await knex("location")
       .update({ ...location, image })
       .where({ id });
-    
-    location.image = image
-    
-    return location;
+
+    if (location.image === "defaul.png") {
+      location.image = image;
+      return location;
+    }
+    const filePath = path.join(
+      __dirname,
+      "..",
+      "..",
+      "uploads",
+      location.image
+    );
+
+    try {
+      await fs.promises.unlink(filePath);
+      return { ...location, image };
+    } catch (error) {
+      return error;
+    }
   }
 
   public async getWithFilter(city: string, uf: string, parsedItems: number[]) {
-    const list = await knex('location')
-        .join('locations_items', 'location.id', '=', 'locations_items.location_id')
-        .whereIn('locations_items.item_id', parsedItems)
-        .where('city', String(city))
-        .where('uf', String(uf))
-        .distinct()
-        .select('location.*');
+    const list = await knex("location")
+      .join(
+        "locations_items",
+        "location.id",
+        "=",
+        "locations_items.location_id"
+      )
+      .whereIn("locations_items.item_id", parsedItems)
+      .where("city", String(city))
+      .where("uf", String(uf))
+      .distinct()
+      .select("location.*");
 
     return list;
   }
 
-  public async findById(id: string){
-    return await knex('location').select().where({id}).first();
+  public async findById(id: string) {
+    return await knex("location").select().where({ id }).first();
   }
 }

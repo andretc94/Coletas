@@ -4,14 +4,12 @@ import path from "path";
 
 export default {
   storage: multer.diskStorage({
-    destination: path.resolve(__dirname, "..", "..", "uploads"),
-    async filename(request, file, callback) {
-
+    destination: (req, file, callback) =>
+      callback(null, path.resolve(__dirname, "..", "..", "uploads")),
+    filename(request, file, callback) {
       const hash = crypto.randomBytes(6).toString("hex");
-
       const fileName = `${hash}-${file.originalname}`;
-
-      return callback(null, fileName);
+      callback(null, fileName);
     },
   }),
 };

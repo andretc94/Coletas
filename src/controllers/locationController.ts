@@ -45,15 +45,4 @@ export default class LocationController {
 
     return res.json(location);
   }
-
-  public async findById(req: Request, res: Response, next: NextFunction) {
-    const locationModel = new LocationModel();
-    const { id } = req.params;
-
-    const location = await locationModel.findById(id as string);
-    if(!location){
-      return res.json({message: "Location not found!"});
-    }
-    next();
-  }
 }
